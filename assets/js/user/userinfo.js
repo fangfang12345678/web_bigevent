@@ -5,42 +5,40 @@ form.verify({
     if (val.length > 6) return "昵称长度必须在 1 ~ 6 个字符之间！";
   },
 });
-
-const layer = layui.layer;
-
-// 初始化用户信息
-const initUserInfo = () => {
+//获取用户信息
+const initUserInfo = function (val) {
   $.ajax({
-    type: "GET",
-    url: "/my/userinfo",
-    success: (res) => {
-      if (res.status !== 0) return layer.msg("获取用户信息失败！");
-      console.log(res);
+    type: 'get',
+    url: '/my/userinfo',
+    success: function (res) {
+      if (res.status !== 0) return layer.msg('获取用户信息成功')
+      // console.log(res);
       form.val("formUserInfo", res.data);
-    },
-  });
-};
-
-// 重置表单数据
-$("#btnReset").click((e) => {
+    }
+  })
+}
+//重置功能
+$('#btnReset').click(function (e) {
+  //阻止表单默认重置
   e.preventDefault();
-  initUserInfo();
-});
-
-// 更新用户数据
-$(".layui-form").on("submit", (e) => {
+  initUserInfo()
+})
+//更新功能
+$('.layui-form').submit(function (e) {
   e.preventDefault();
   $.ajax({
-    type: "POST",
+    type: 'POST',
     url: "/my/userinfo",
-    data: $(".layui-form").serialize(),
-    success: (res) => {
-      if (res.status !== 0) return layer.msg("更新用户信息失败！");
-      layer.msg("更新用户信息成功！");
-      // 调用父页面渲染函数
-      window.parent.getUserInfo();
-    },
-  });
-});
-
-initUserInfo();
+    data: $(this).serialize(),
+    success: function (res) {
+      if (res.status !== 0) {
+        return layer.msg("更新用户信息失败")
+      } else {
+        layer.msg("更新用户信息成功")
+        // 在子页面调用父页面的函数
+        window.parent.getUserInfo()
+      }
+    }
+  })
+})
+initUserInfo()

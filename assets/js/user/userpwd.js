@@ -9,21 +9,21 @@ form.verify({
     if (val !== $("[name=newPwd]").val()) return "两次密码不一致！";
   },
 });
-
-const layer = layui.layer;
-
-// 发送请求，重置密码
-$(".layui-form").on("submit", (e) => {
+//更新密码
+$('.layui-form').submit(function (e) {
   e.preventDefault();
   $.ajax({
     type: "POST",
-    url: "/my/updatepwd",
-    data: $(".layui-form").serialize(),
-    success: (res) => {
-      if (res.status !== 0) return layer.msg("更新密码失败！");
-      layer.msg("更新密码成功！");
-      // 重置表单
-      $(".layui-form")[0].reset();
-    },
-  });
-});
+    url: '/my/updatepwd',
+    data: $(this).serialize(),
+    success: function (res) {
+      console.log(res);
+      if (res.status !== 0) {
+        return layer.msg("更新失败")
+
+      }
+      localStorage.removeItem('token')
+      window.parent.location.href = '/login.html'
+    }
+  })
+})
