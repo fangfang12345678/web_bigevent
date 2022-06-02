@@ -62,3 +62,7 @@ $("#btnLogout").click(() => {
 
 // 调用 getUserInfo 函数获取用户基本信息
 getUserInfo();
+
+function change() {
+  $('#change').attr('class', 'layui-this').next().attr('class', '')
+}
